@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { SECURITIES_BASE_URL } from "@/app/api/constancts";
-
-const SECURITY_TYPES = ["Bill", "Note", "Bond", "CMB", "TIPS", "FRN"];
+import { SECURITIES_BASE_URL, SECURITY_TYPES } from "@/app/api/constancts";
 
 export const GET = async (request: Request) => {
   const { searchParams } = new URL(request.url);
@@ -16,7 +14,7 @@ export const GET = async (request: Request) => {
 
   const res = await fetch(url);
   const data = await res.json();
-  return NextResponse.json(data);
+  return NextResponse.json({ data });
 };
 
 const errorResponse = (msg: string) => new Response(msg, { status: 400 });
