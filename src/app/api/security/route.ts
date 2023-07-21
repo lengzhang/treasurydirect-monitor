@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { SECURITIES_BASE_URL } from "@/app/api/constancts";
+import { SECURITIES_BASE_URL } from "@/app/constancts";
 
 export const GET = async (request: Request) => {
   const { searchParams } = new URL(request.url);
