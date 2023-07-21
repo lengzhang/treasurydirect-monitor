@@ -22,7 +22,7 @@ export const GET = async (request: Request) => {
   );
   const data = await res.json();
 
-  return NextResponse.json(data);
+  return NextResponse.json({ data });
 };
 
 const errorResponse = (msg: string) => new Response(msg, { status: 400 });
