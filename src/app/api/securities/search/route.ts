@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { SECURITIES_BASE_URL, SECURITY_TYPES } from "@/app/constancts";
+import { SECURITIES_BASE_URL, SECURITY_TYPES } from "@/constancts";
 
 const BASE_URL = `${SECURITIES_BASE_URL}/search`;
 
