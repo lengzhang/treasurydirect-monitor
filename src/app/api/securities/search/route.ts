@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { SECURITIES_BASE_URL, SECURITY_TYPES } from "@/constancts";
+import {
+  SECURITIES_BASE_URL,
+  SECURITY_TYPES,
+  SECURITY_TYPES_TYPE,
+} from "@/constancts";
 
 const BASE_URL = `${SECURITIES_BASE_URL}/search`;
 
@@ -13,7 +17,10 @@ export const GET = async (request: Request) => {
   const pagenum = Number.parseInt(searchParams.pagenum || "0");
   if (Number.isNaN(pagenum)) return errorResponse("pagenum must be numeric");
 
-  if (searchParams.type && !SECURITY_TYPES.includes(searchParams.type)) {
+  if (
+    searchParams.type &&
+    !SECURITY_TYPES.includes(searchParams.type as SECURITY_TYPES_TYPE)
+  ) {
     return errorResponse("type is invalid");
   }
 
