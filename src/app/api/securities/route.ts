@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 
-import { SECURITIES_BASE_URL, SECURITY_TYPES } from "@/app/api/constancts";
+import {
+  SECURITIES_BASE_URL,
+  SECURITY_TYPES,
+  SECURITY_TYPES_TYPE,
+} from "@/constancts";
 
 export const GET = async (request: Request) => {
   const { searchParams } = new URL(request.url);
 
-  const type = searchParams.get("type") || "";
+  const type: any = searchParams.get("type") || "";
   if (!type) return errorResponse("Missing type");
   if (!SECURITY_TYPES.includes(type)) return errorResponse("Type is invalid");
 
