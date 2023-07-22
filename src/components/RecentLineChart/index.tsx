@@ -56,7 +56,7 @@ const RecentLineChart: FC<{ securityType: SECURITY_TYPES_TYPE }> = ({
       />
       <Grid container spacing={1} marginTop={2} direction={"column"}>
         {Object.keys(terms)
-          .sort((a, b) => a - b)
+          .sort((a, b) => a.localeCompare(b))
           .map((unit) => {
             const isAllHide =
               Object.values(terms[unit]).findIndex((term) => !term.hidden) ===
