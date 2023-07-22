@@ -1,6 +1,6 @@
 "use client";
 
-import { SECURITY_TYPES_TYPE } from "@/constancts";
+import { SECURITY_TYPES, SECURITY_TYPES_TYPE } from "@/constancts";
 import { getChartJSColor } from "@/utils";
 import { ChartDataset } from "chart.js";
 import { useCallback, useEffect, useState } from "react";
@@ -11,19 +11,25 @@ type TermsType = Record<
     string,
     {
       averagePrice: number;
+      averageRate: number;
       hidden: boolean;
       color: string;
-      dates: Record<string, number>;
+      dates: Record<string, { price: number; rate: number }>;
     }
   >
 >;
 
 const abortFetchController = new AbortController();
 
-const useRecentLineChart = (securityType: SECURITY_TYPES_TYPE) => {
+const useRecentLineChart = () => {
+  const [securityType, setSecurityType] = useState<SECURITY_TYPES_TYPE>(
+    SECURITY_TYPES[0]
+  );
+  const [isPriceMode, setIsPriceMode] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [labels, setLabels] = useState<string[]>([]);
   const [terms, setTerms] = useState<TermsType>({});
+
   useEffect(() => {
     return () => {
       abortFetchController.abort();
@@ -68,7 +74,10 @@ const useRecentLineChart = (securityType: SECURITY_TYPES_TYPE) => {
       labels: string[];
       terms: TermsType;
     }>(
-      ({ labels, terms }, { issueDate, securityTerm, pricePer100 }) => {
+      (
+        { labels, terms },
+        { issueDate, securityTerm, pricePer100, averageMedianDiscountRate }
+      ) => {
         const issueDateStr = issueDate.replace(/T.*/, "");
         if (!labels.includes(issueDateStr)) labels.push(issueDateStr);
 
@@ -76,6 +85,7 @@ const useRecentLineChart = (securityType: SECURITY_TYPES_TYPE) => {
         if (isNaN(price)) return { labels, terms };
 
         const unit = securityTerm.split(/\b/)[2];
+        const rate = parseFloat(averageMedianDiscountRate);
 
         if (!terms[unit]) terms[unit] = {};
         if (!terms[unit][securityTerm])
@@ -84,13 +94,19 @@ const useRecentLineChart = (securityType: SECURITY_TYPES_TYPE) => {
             color: "",
             dates: {},
             averagePrice: price,
+            averageRate: rate,
           };
         if (!terms[unit][securityTerm].dates[issueDateStr])
-          terms[unit][securityTerm].dates[issueDateStr] = price;
-        terms[unit][securityTerm].dates[issueDateStr] =
-          (terms[unit][securityTerm].dates[issueDateStr] + price) / 2;
+          terms[unit][securityTerm].dates[issueDateStr] = { price, rate };
+        terms[unit][securityTerm].dates[issueDateStr].price =
+          (terms[unit][securityTerm].dates[issueDateStr].price + price) / 2;
+        terms[unit][securityTerm].dates[issueDateStr].rate =
+          (terms[unit][securityTerm].dates[issueDateStr].rate + rate) / 2;
+
         terms[unit][securityTerm].averagePrice =
           (terms[unit][securityTerm].averagePrice + price) / 2;
+        terms[unit][securityTerm].averageRate =
+          (terms[unit][securityTerm].averageRate + price) / 2;
 
         return { labels, terms };
       },
@@ -120,6 +136,7 @@ const useRecentLineChart = (securityType: SECURITY_TYPES_TYPE) => {
   }, [securityType]);
 
   const generateChartData = useCallback(() => {
+    const mode = isPriceMode ? "price" : "rate";
     const datasets: ChartDataset<"line", (number | null)[]>[] = [];
     for (const unit of Object.keys(terms)) {
       for (const term of Object.keys(terms[unit]).sort(
@@ -127,7 +144,7 @@ const useRecentLineChart = (securityType: SECURITY_TYPES_TYPE) => {
       )) {
         const dataset: ChartDataset<"line", (number | null)[]> = {
           label: term,
-          data: labels.map((lb) => terms[unit][term].dates[lb] || null),
+          data: labels.map((lb) => terms[unit][term].dates[lb]?.[mode] || null),
           borderColor: terms[unit][term].color,
           backgroundColor: terms[unit][term].color,
           hidden: terms[unit][term].hidden,
@@ -137,7 +154,14 @@ const useRecentLineChart = (securityType: SECURITY_TYPES_TYPE) => {
     }
 
     return { labels, datasets };
-  }, [labels, terms]);
+  }, [labels, terms, isPriceMode]);
+
+  const handleSecurityTypeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value as SECURITY_TYPES_TYPE;
+    if (value !== securityType) setSecurityType(value);
+  };
 
   const onClickLegend = (legendUnit: string, legendTerm: string) => () => {
     setTerms((prevTerms) => {
@@ -160,12 +184,20 @@ const useRecentLineChart = (securityType: SECURITY_TYPES_TYPE) => {
     });
   };
 
+  const onSwitchDataMode = () => {
+    setIsPriceMode((prev) => !prev);
+  };
+
   return {
+    type: securityType,
+    isPriceMode,
     isLoading,
     data: generateChartData(),
     terms,
+    handleSecurityTypeChange,
     onClickLegend,
     onTriggerAll,
+    onSwitchDataMode,
   };
 };
 
