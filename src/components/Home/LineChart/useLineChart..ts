@@ -38,15 +38,17 @@ const useLineChart = (data: Record<string, string>[], isPriceMode: boolean) => {
     dispatch({ type: "set-datasets", datasets });
   }, [isPriceMode, state.labels, state.terms]);
 
-  const onClickLegend = (unit: string, term: string) =>
-    useCallback(() => {
+  const onClickLegend = useCallback(
+    (unit: string, term: string) => () => {
       const terms = Object.assign({}, state.terms);
       terms[unit][term].hidden = !terms[unit][term].hidden;
       dispatch({ type: "set-terms", terms });
-    }, [state.terms]);
+    },
+    [state.terms]
+  );
 
-  const onTriggerAllLegends = (unit: string, isAllHide: boolean) =>
-    useCallback(() => {
+  const onTriggerAllLegends = useCallback(
+    (unit: string, isAllHide: boolean) => () => {
       const terms = Object.assign({}, state.terms);
 
       for (const term of Object.keys(terms[unit])) {
@@ -54,7 +56,9 @@ const useLineChart = (data: Record<string, string>[], isPriceMode: boolean) => {
       }
 
       dispatch({ type: "set-terms", terms });
-    }, [state.terms]);
+    },
+    [state.terms]
+  );
 
   return { state, onClickLegend, onTriggerAllLegends };
 };
