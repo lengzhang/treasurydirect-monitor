@@ -1,44 +1,31 @@
 "use client";
 
-import {
-  Box,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
-import { useState } from "react";
-import useHome from "./useHome";
+import { Box, LinearProgress, Typography } from "@mui/material";
 
-import RecentLineChart from "@/components/RecentLineChart";
-import { SECURITY_TYPES, SECURITY_TYPES_TYPE } from "@/constancts";
+import ControlSection from "@/components/Home/ControlSection";
+
+import useHome from "./useHome";
+import LineChart from "@/components/Home/LineChart";
 
 const Home = () => {
-  const {} = useHome();
-
-  const [type, setType] = useState<SECURITY_TYPES_TYPE>(SECURITY_TYPES[0]);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setType((event.target as HTMLInputElement).value as SECURITY_TYPES_TYPE);
-  };
+  const { state, onSelectSecurityType, onSwitchDisplayMode } = useHome();
 
   return (
-    <Box padding={2} paddingLeft={8} paddingRight={8}>
-      <FormControl>
-        <FormLabel id="security-type-label">Security Type</FormLabel>
-        <RadioGroup row name="security-type-group" value={type} onChange={handleChange}>
-          {SECURITY_TYPES.map((type) => (
-            <FormControlLabel
-              key={type}
-              value={type}
-              control={<Radio />}
-              label={type}
-            />
-          ))}
-        </RadioGroup>
-      </FormControl>
-      <RecentLineChart securityType={type} />
+    <Box paddingTop={2} paddingBottom={2}>
+      <Typography variant="h5">Securities in recent year</Typography>
+      <ControlSection
+        type={state.securityType}
+        isPriceDisplayMode={state.displayMode}
+        onSelectSecurityType={onSelectSecurityType}
+        onSwitchDisplayMode={onSwitchDisplayMode}
+      />
+      {state.isFetching ? (
+        <Box marginTop={2}>
+          <LinearProgress /> Loading data...
+        </Box>
+      ) : (
+        <LineChart data={state.data} isPriceMode={state.displayMode} />
+      )}
     </Box>
   );
 };
