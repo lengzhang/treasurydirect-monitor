@@ -1,13 +1,31 @@
 "use client";
 
-import { Box } from "@mui/material";
+import { Box, LinearProgress, Typography } from "@mui/material";
 
-import RecentLineChart from "@/components/RecentLineChart";
+import ControlSection from "@/components/Home/ControlSection";
+
+import useHome from "./useHome";
+import LineChart from "@/components/Home/LineChart";
 
 const Home = () => {
+  const { state, onSelectSecurityType, onSwitchDisplayMode } = useHome();
+
   return (
-    <Box padding={2} paddingLeft={8} paddingRight={8}>
-      <RecentLineChart />
+    <Box paddingTop={2} paddingBottom={2}>
+      <Typography variant="h5">Securities in recent year</Typography>
+      <ControlSection
+        type={state.securityType}
+        isPriceDisplayMode={state.displayMode}
+        onSelectSecurityType={onSelectSecurityType}
+        onSwitchDisplayMode={onSwitchDisplayMode}
+      />
+      {state.isFetching ? (
+        <Box marginTop={2}>
+          <LinearProgress /> Loading data...
+        </Box>
+      ) : (
+        <LineChart data={state.data} isPriceMode={state.displayMode} />
+      )}
     </Box>
   );
 };
