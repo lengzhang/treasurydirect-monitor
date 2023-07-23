@@ -15,6 +15,12 @@ import {
 import MuiAppBar from "@mui/material/AppBar";
 import Link from "next/link";
 
+const AppBarButton = styled(ButtonBase)({
+  borderBottom: "white",
+  borderStyle: "solid",
+  paddingBottom: 2,
+});
+
 const AppBar = () => {
   return (
     <ThemeProvider
@@ -29,23 +35,27 @@ const AppBar = () => {
     >
       <MuiAppBar position="static">
         <Toolbar>
-          <ButtonBase LinkComponent={Link} href="/">
-            <Typography variant="h6" component={"div"}>
-              TDM
-            </Typography>
-          </ButtonBase>
+          <Box position={"absolute"}>
+            <ButtonBase LinkComponent={Link} href="/">
+              <Typography variant="h6" component={"div"}>
+                TDM
+              </Typography>
+            </ButtonBase>
+          </Box>
           <Stack
             spacing={2}
             direction={"row"}
             marginLeft={"auto"}
             marginRight={"auto"}
           >
-            <ButtonBase LinkComponent={Link} href="/">
+            {/*@ts-ignore*/}
+            <AppBarButton LinkComponent={Link} href="/">
               Recent Year
-            </ButtonBase>
-            <ButtonBase LinkComponent={Link} href="/monitor">
+            </AppBarButton>
+            {/*@ts-ignore*/}
+            <AppBarButton LinkComponent={Link} href="/monitor">
               Monitor
-            </ButtonBase>
+            </AppBarButton>
           </Stack>
         </Toolbar>
       </MuiAppBar>
