@@ -6,6 +6,8 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
+import AppBar from "@/components/AppBar";
+
 export const metadata: Metadata = {
   title: "TD Monitor by LengZ",
   description: "An app to track TD securities from public APIs",
@@ -19,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
+        <AppBar />
         <Container maxWidth="lg">{children}</Container>
       </body>
     </html>
