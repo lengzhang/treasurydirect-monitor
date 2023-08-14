@@ -43,12 +43,12 @@ const LegendsGroup: FC<LegendsGroupInterface> = ({
               {Object.keys(terms[unit])
                 .sort((a, b) => parseInt(a) - parseInt(b))
                 .map((term) => {
-                  const { averagePrice, color, hidden } = terms[unit][term];
+                  const { color, hidden } = terms[unit][term];
                   return (
                     <Grid key={term} item>
                       <Chip
                         style={{ color: hidden ? "gray" : color }}
-                        label={term + ": $" + averagePrice.toFixed(2)}
+                        label={term}
                         size="small"
                         variant="outlined"
                         onClick={onClickLegend(unit, term)}

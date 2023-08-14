@@ -50,7 +50,7 @@ const AppBar = () => {
           >
             {/*@ts-ignore*/}
             <AppBarButton LinkComponent={Link} href="/">
-              Recent Year
+              Recent securities
             </AppBarButton>
             {/*@ts-ignore*/}
             <AppBarButton LinkComponent={Link} href="/monitor">

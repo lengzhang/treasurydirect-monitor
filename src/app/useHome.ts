@@ -1,5 +1,12 @@
-import { SECURITY_TYPES, SECURITY_TYPES_TYPE } from "@/constancts";
-import { useEffect, useState, useReducer } from "react";
+"use client";
+import {
+  SECURITY_TYPES,
+  SECURITY_TYPES_TYPE,
+  QUERY_DATE_FORMAT,
+} from "@/constancts";
+import useMount from "@/hooks/useMount";
+import dayjs, { Dayjs } from "dayjs";
+import { useEffect, useReducer } from "react";
 
 const abortFetchController = new AbortController();
 
@@ -8,26 +15,64 @@ interface State {
   data: Record<string, string>[];
   securityType: SECURITY_TYPES_TYPE;
   displayMode: boolean;
+  sinceFrom: Dayjs | null;
 }
 
 type Action =
   | {
-    type: "fetching" | "fetched" | "switch-display-mode";
-  }
+      type: "fetching" | "fetched" | "switch-display-mode";
+    }
   | {
-    type: "set-data";
-    data: Record<string, string>[];
-  }
+      type: "set-data";
+      data: Record<string, string>[];
+    }
   | {
-    type: "set-security-type";
-    securityType: SECURITY_TYPES_TYPE;
-  };
+      type: "set-security-type";
+      securityType: SECURITY_TYPES_TYPE;
+    }
+  | {
+      type: "set-since-from";
+      value: Dayjs;
+    };
+
+type LocalStorageState = Partial<
+  Pick<State, "securityType" | "displayMode">
+> & {
+  sinceFrom?: string;
+};
 
 const initialState: State = {
   isFetching: true,
   data: [],
   securityType: SECURITY_TYPES[0],
   displayMode: true,
+  sinceFrom: dayjs().subtract(1, "year"),
+};
+
+const toState = (obj: LocalStorageState) => {
+  console.log(obj);
+  const state = initialState;
+  if (
+    obj?.securityType &&
+    SECURITY_TYPES.includes(obj.securityType as SECURITY_TYPES_TYPE)
+  ) {
+    state.securityType = obj.securityType as SECURITY_TYPES_TYPE;
+  }
+  if (obj?.displayMode === false) state.displayMode = false;
+  if (obj?.sinceFrom) {
+    const date = dayjs(obj.sinceFrom);
+    if (date.isValid()) state.sinceFrom = date;
+  }
+  return state;
+};
+
+const fromState = (state: State): string => {
+  const obj: LocalStorageState = {
+    securityType: state.securityType,
+    displayMode: state.displayMode,
+    sinceFrom: state.sinceFrom?.toISOString(),
+  };
+  return JSON.stringify(obj);
 };
 
 const reducer = (state: State, action: Action): State => {
@@ -42,13 +87,27 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, securityType: action.securityType };
     case "switch-display-mode":
       return { ...state, displayMode: !state.displayMode };
+    case "set-since-from":
+      return { ...state, sinceFrom: action.value };
     default:
       return state;
   }
 };
 
 const useHome = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const isMount = useMount();
+  const [state, dispatch] = useReducer(
+    reducer,
+    toState(
+      JSON.parse(isMount ? localStorage.getItem("home-page") || "{}" : "{}")
+    )
+  );
+
+  useEffect(() => {
+    return () => {
+      localStorage.setItem("home-page", fromState(state));
+    };
+  }, [state]);
 
   useEffect(() => {
     return () => {
@@ -56,7 +115,11 @@ const useHome = () => {
     };
   }, []);
 
-  const fetchData = async (type: SECURITY_TYPES_TYPE) => {
+  const fetchData = async (
+    type: SECURITY_TYPES_TYPE,
+    sinceFrom: Dayjs | null
+  ) => {
+    if (sinceFrom === null) sinceFrom = dayjs().subtract(1, "year");
     const data: Record<string, string>[] = [];
 
     const url = new URL(`${location.href}api/securities/search`);
@@ -64,12 +127,8 @@ const useHome = () => {
     url.searchParams.set("type", type);
     url.searchParams.set("dateFieldName", "issueDate");
 
-    const today = new Date();
-    const year = today.getUTCFullYear();
-    const month = (today.getUTCMonth() + 1).toString().padStart(2, "0");
-    const day = today.getUTCDate().toString().padStart(2, "0");
-    const endDate = `${year}-${month}-${day}`;
-    const startDate = `${year - 1}-${month}-${day}`;
+    const endDate = dayjs().format(QUERY_DATE_FORMAT);
+    const startDate = sinceFrom.format(QUERY_DATE_FORMAT);
 
     url.searchParams.set("endDate", endDate);
     url.searchParams.set("startDate", startDate);
@@ -85,7 +144,7 @@ const useHome = () => {
         if (resData.data?.length > 0) data.push(...resData.data);
         else hasNext = false;
       } else {
-        console.log(res);
+        console.error(res);
         hasNext = false;
       }
       pagenum++;
@@ -96,23 +155,34 @@ const useHome = () => {
   };
 
   useEffect(() => {
-    dispatch({ type: "fetching" });
-    fetchData(state.securityType);
-    return () => {
-      abortFetchController.abort();
-    };
-  }, [state.securityType]);
+    if (isMount) {
+      dispatch({ type: "fetching" });
+      fetchData(state.securityType, state.sinceFrom);
+    }
+  }, [isMount, state.securityType, state.sinceFrom]);
 
   const onSelectSecurityType = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value as SECURITY_TYPES_TYPE;
-    if (value !== state.securityType) dispatch({ type: 'set-security-type', securityType: value })
-  }
+    if (value !== state.securityType)
+      dispatch({ type: "set-security-type", securityType: value });
+  };
 
   const onSwitchDisplayMode = () => {
-    dispatch({type: 'switch-display-mode'})
-  }
+    dispatch({ type: "switch-display-mode" });
+  };
 
-  return {state, onSelectSecurityType, onSwitchDisplayMode};
+  const onChangeSinceFrom = (value: Dayjs | null) => {
+    if (value === null) return;
+    dispatch({ type: "set-since-from", value });
+  };
+
+  return {
+    isMount,
+    state,
+    onSelectSecurityType,
+    onSwitchDisplayMode,
+    onChangeSinceFrom,
+  };
 };
 
 export default useHome;

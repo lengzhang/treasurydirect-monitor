@@ -8,16 +8,31 @@ import useHome from "./useHome";
 import LineChart from "@/components/Home/LineChart";
 
 const Home = () => {
-  const { state, onSelectSecurityType, onSwitchDisplayMode } = useHome();
+  const {
+    isMount,
+    state,
+    onSelectSecurityType,
+    onSwitchDisplayMode,
+    onChangeSinceFrom,
+  } = useHome();
+
+  if (!isMount)
+    return (
+      <Box marginTop={2}>
+        <LinearProgress /> Loading...
+      </Box>
+    );
 
   return (
     <Box paddingTop={2} paddingBottom={2}>
-      <Typography variant="h5">Securities in recent year</Typography>
+      <Typography variant="h5">Recent securities</Typography>
       <ControlSection
         type={state.securityType}
         isPriceDisplayMode={state.displayMode}
+        sinceFrom={state.sinceFrom}
         onSelectSecurityType={onSelectSecurityType}
         onSwitchDisplayMode={onSwitchDisplayMode}
+        onChangeSinceFrom={onChangeSinceFrom}
       />
       {state.isFetching ? (
         <Box marginTop={2}>

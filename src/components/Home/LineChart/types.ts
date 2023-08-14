@@ -1,8 +1,6 @@
 import { ChartDataset } from "chart.js";
 
 export interface TermType {
-  averagePrice: number;
-  averageRate: number;
   hidden: boolean;
   color: string;
   dates: Record<string, { price: number; rate: number }>;
