@@ -22,8 +22,6 @@ export const getLabelsAndTerms = (data: Record<string, string>[]) => {
           hidden: false,
           color: "",
           dates: {},
-          averagePrice: price,
-          averageRate: rate,
         };
       if (!terms[unit][securityTerm].dates[issueDateStr])
         terms[unit][securityTerm].dates[issueDateStr] = { price, rate };
@@ -31,11 +29,6 @@ export const getLabelsAndTerms = (data: Record<string, string>[]) => {
         (terms[unit][securityTerm].dates[issueDateStr].price + price) / 2;
       terms[unit][securityTerm].dates[issueDateStr].rate =
         (terms[unit][securityTerm].dates[issueDateStr].rate + rate) / 2;
-
-      terms[unit][securityTerm].averagePrice =
-        (terms[unit][securityTerm].averagePrice + price) / 2;
-      terms[unit][securityTerm].averageRate =
-        (terms[unit][securityTerm].averageRate + price) / 2;
 
       return { labels, terms };
     },
