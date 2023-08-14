@@ -35,12 +35,44 @@ type Action =
       value: Dayjs;
     };
 
+type LocalStorageState = Partial<
+  Pick<State, "securityType" | "displayMode">
+> & {
+  sinceFrom?: string;
+};
+
 const initialState: State = {
   isFetching: true,
   data: [],
   securityType: SECURITY_TYPES[0],
   displayMode: true,
   sinceFrom: dayjs().subtract(1, "year"),
+};
+
+const toState = (obj: LocalStorageState) => {
+  console.log(obj);
+  const state = initialState;
+  if (
+    obj?.securityType &&
+    SECURITY_TYPES.includes(obj.securityType as SECURITY_TYPES_TYPE)
+  ) {
+    state.securityType = obj.securityType as SECURITY_TYPES_TYPE;
+  }
+  if (obj?.displayMode === false) state.displayMode = false;
+  if (obj?.sinceFrom) {
+    const date = dayjs(obj.sinceFrom);
+    if (date.isValid()) state.sinceFrom = date;
+  }
+  return state;
+};
+
+const fromState = (state: State): string => {
+  const obj: LocalStorageState = {
+    securityType: state.securityType,
+    displayMode: state.displayMode,
+    sinceFrom: state.sinceFrom?.toISOString(),
+  };
+  return JSON.stringify(obj);
 };
 
 const reducer = (state: State, action: Action): State => {
@@ -64,7 +96,18 @@ const reducer = (state: State, action: Action): State => {
 
 const useHome = () => {
   const isMount = useMount();
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(
+    reducer,
+    toState(
+      JSON.parse(isMount ? localStorage.getItem("home-page") || "{}" : "{}")
+    )
+  );
+
+  useEffect(() => {
+    return () => {
+      localStorage.setItem("home-page", fromState(state));
+    };
+  }, [state]);
 
   useEffect(() => {
     return () => {
