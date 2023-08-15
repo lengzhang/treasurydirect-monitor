@@ -1,10 +1,7 @@
 "use client";
 import {
   Box,
-  Button,
   ButtonBase,
-  Container,
-  Divider,
   Stack,
   ThemeProvider,
   Toolbar,
@@ -17,11 +14,16 @@ import Link from "next/link";
 
 const AppBarButton = styled(ButtonBase)({
   borderBottom: "white",
-  borderStyle: "solid",
   paddingBottom: 2,
 });
 
+const LINKS = [
+  { href: "/", label: "Recent" },
+  { href: "/announced", label: "Announced" },
+];
+
 const AppBar = () => {
+  const pathname = location.pathname;
   return (
     <ThemeProvider
       theme={createTheme({
@@ -48,14 +50,19 @@ const AppBar = () => {
             marginLeft={"auto"}
             marginRight={"auto"}
           >
-            {/*@ts-ignore*/}
-            <AppBarButton LinkComponent={Link} href="/">
-              Recent securities
-            </AppBarButton>
-            {/*@ts-ignore*/}
-            <AppBarButton LinkComponent={Link} href="/monitor">
-              Monitor
-            </AppBarButton>
+            {LINKS.map(({ href, label }) => (
+              <AppBarButton
+                key={label}
+                LinkComponent={Link}
+                /*@ts-ignore*/
+                href={href}
+                style={{
+                  borderStyle: pathname === href ? "solid" : "none",
+                }}
+              >
+                {label}
+              </AppBarButton>
+            ))}
           </Stack>
         </Toolbar>
       </MuiAppBar>
