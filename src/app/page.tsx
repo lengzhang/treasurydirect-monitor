@@ -24,7 +24,7 @@ const Home = () => {
     );
 
   return (
-    <Box paddingTop={2} paddingBottom={2}>
+    <>
       <Typography variant="h5">Recent securities</Typography>
       <ControlSection
         type={state.securityType}
@@ -41,7 +41,7 @@ const Home = () => {
       ) : (
         <LineChart data={state.data} isPriceMode={state.displayMode} />
       )}
-    </Box>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import type { Metadata } from "next";
 
 import "@fontsource/roboto/300.css";
@@ -22,7 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <AppBar />
-        <Container maxWidth="lg">{children}</Container>
+        <Container maxWidth="lg">
+          <Box paddingTop={2} paddingBottom={2}>
+            {children}
+          </Box>
+        </Container>
       </body>
     </html>
   );
