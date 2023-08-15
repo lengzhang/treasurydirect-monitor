@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Box,
   ButtonBase,
@@ -11,6 +12,7 @@ import {
 } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 const AppBarButton = styled(ButtonBase)({
   borderBottom: "white",
@@ -23,7 +25,9 @@ const LINKS = [
 ];
 
 const AppBar = () => {
-  const pathname = location.pathname;
+  const route = useRouter();
+  const pathname = usePathname();
+
   return (
     <ThemeProvider
       theme={createTheme({
@@ -54,7 +58,7 @@ const AppBar = () => {
               <AppBarButton
                 key={label}
                 LinkComponent={Link}
-                /*@ts-ignore*/
+                /* @ts-ignore */
                 href={href}
                 style={{
                   borderStyle: pathname === href ? "solid" : "none",
