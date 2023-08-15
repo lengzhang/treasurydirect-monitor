@@ -5,8 +5,6 @@ import useMount from "@/hooks/useMount";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 
-const abortFetchController = new AbortController();
-
 interface DisplayData {
   id: string;
   cusip: string;
@@ -37,7 +35,7 @@ const useAnnouncedDataDisplay = (
     url.searchParams.set("type", securityType);
     url.searchParams.set("days", days.toString());
 
-    const res = await fetch(url, { signal: abortFetchController.signal });
+    const res = await fetch(url);
     if (res.status === 200) {
       const resData = await res.json();
       if (resData.data?.length > 0) data.push(...resData.data);
@@ -79,12 +77,6 @@ const useAnnouncedDataDisplay = (
     );
     setIsFetching(false);
   };
-
-  useEffect(() => {
-    return () => {
-      abortFetchController.abort();
-    };
-  }, []);
 
   useEffect(() => {
     if (isMount) {
