@@ -1,6 +1,5 @@
 import { FC } from "react";
 import useLineChart from "./useLineChart.";
-import { Box } from "@mui/material";
 import { Line } from "react-chartjs-2";
 import { LineChartInterface } from "./types";
 
@@ -35,12 +34,10 @@ const LineChart: FC<LineChartInterface> = ({ data, isPriceMode }) => {
   );
   return (
     <>
-      <Box>
-        <Line
-          data={{ labels: state.labels, datasets: state.datasets }}
-          options={{ spanGaps: true, plugins: { legend: { display: false } } }}
-        />
-      </Box>
+      <Line
+        data={{ labels: state.labels, datasets: state.datasets }}
+        options={{ spanGaps: true, plugins: { legend: { display: false } } }}
+      />
       <LegendsGroup
         terms={state.terms}
         onTriggerAllLegends={onTriggerAllLegends}

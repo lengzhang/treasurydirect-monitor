@@ -4,12 +4,12 @@ import { FC } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import useMount from "@/hooks/useMount";
 
-interface ControlSectionFromProps {
+interface SinceFromDatePickerProps {
   value: Dayjs | null;
   onChange: (value: Dayjs | null) => void;
 }
 
-const ControlSectionFrom: FC<ControlSectionFromProps> = ({
+const SinceFromDatePicker: FC<SinceFromDatePickerProps> = ({
   value,
   onChange,
 }) => {
@@ -31,4 +31,4 @@ const ControlSectionFrom: FC<ControlSectionFromProps> = ({
   );
 };
 
-export default ControlSectionFrom;
+export default SinceFromDatePicker;
