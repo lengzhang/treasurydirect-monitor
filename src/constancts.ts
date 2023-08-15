@@ -5,4 +5,4 @@ export const SECURITIES_BASE_URL = `${TD_BASE_URL}/securities`;
 export type SECURITY_TYPES_TYPE = "Bill" | "Note" | "Bond";
 export const SECURITY_TYPES: SECURITY_TYPES_TYPE[] = ["Bill", "Note", "Bond"];
 
-export const QUERY_DATE_FORMAT = "YYYY-MM-DD";
+export const DATE_FORMAT = "YYYY-MM-DD";

@@ -1,9 +1,5 @@
 "use client";
-import {
-  SECURITY_TYPES,
-  SECURITY_TYPES_TYPE,
-  QUERY_DATE_FORMAT,
-} from "@/constancts";
+import { SECURITY_TYPES, SECURITY_TYPES_TYPE, DATE_FORMAT } from "@/constancts";
 import useMount from "@/hooks/useMount";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useReducer } from "react";
@@ -50,7 +46,6 @@ const initialState: State = {
 };
 
 const toState = (obj: LocalStorageState) => {
-  console.log(obj);
   const state = initialState;
   if (
     obj?.securityType &&
@@ -127,8 +122,8 @@ const useHome = () => {
     url.searchParams.set("type", type);
     url.searchParams.set("dateFieldName", "issueDate");
 
-    const endDate = dayjs().format(QUERY_DATE_FORMAT);
-    const startDate = sinceFrom.format(QUERY_DATE_FORMAT);
+    const endDate = dayjs().format(DATE_FORMAT);
+    const startDate = sinceFrom.format(DATE_FORMAT);
 
     url.searchParams.set("endDate", endDate);
     url.searchParams.set("startDate", startDate);
