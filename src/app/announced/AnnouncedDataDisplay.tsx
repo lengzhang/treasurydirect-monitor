@@ -8,6 +8,7 @@ import {
   GridValueGetterParams,
 } from "@mui/x-data-grid";
 import { Dayjs } from "dayjs";
+import { Box, LinearProgress } from "@mui/material";
 
 interface AnnouncedDataDisplayProps {
   securityType: SECURITY_TYPES_TYPE;
@@ -23,25 +24,39 @@ const dateValueGetter = (
 const priceValueGetter = (
   params: GridValueGetterParams<any, number, GridTreeNodeWithRender>
 ) => {
-  return params.value?.toFixed(4);
+  return "$" + params.value?.toFixed(2);
 };
 
 const rateValueGetter = (
   params: GridValueGetterParams<any, number, GridTreeNodeWithRender>
 ) => {
-  return params.value?.toFixed(4) + "%";
+  return params.value?.toFixed(2) + "%";
 };
 
 const columns: GridColDef[] = [
-  { field: "cusip", headerName: "cusip", flex: 2 },
-  { field: "securityType", headerName: "type", flex: 1, align: "left" },
-  { field: "securityTerm", headerName: "term", flex: 1, align: "right" },
+  { field: "cusip", headerName: "cusip", flex: 2, minWidth: 104 },
+  {
+    field: "securityType",
+    headerName: "type",
+    flex: 1,
+    align: "left",
+    minWidth: 104,
+  },
+  {
+    field: "securityTerm",
+    headerName: "term",
+    flex: 1,
+    align: "right",
+    minWidth: 104,
+    valueGetter: (params) => params.value.replace("-", " "),
+  },
   {
     field: "auctionDate",
     headerName: "auction date",
     valueGetter: dateValueGetter,
     flex: 2,
     align: "center",
+    minWidth: 152,
   },
   {
     field: "issueDate",
@@ -49,13 +64,7 @@ const columns: GridColDef[] = [
     valueGetter: dateValueGetter,
     flex: 2,
     align: "center",
-  },
-  {
-    field: "maturingDate",
-    headerName: "maturing date",
-    valueGetter: dateValueGetter,
-    flex: 2,
-    align: "center",
+    minWidth: 136,
   },
   {
     field: "price",
@@ -63,6 +72,7 @@ const columns: GridColDef[] = [
     valueGetter: priceValueGetter,
     flex: 1,
     align: "right",
+    minWidth: 104,
   },
   {
     field: "rate",
@@ -70,6 +80,7 @@ const columns: GridColDef[] = [
     valueGetter: rateValueGetter,
     flex: 1,
     align: "right",
+    minWidth: 104,
   },
 ];
 
@@ -82,6 +93,14 @@ const AnnouncedDataDisplay: FC<AnnouncedDataDisplayProps> = ({
     days
   );
 
+  if (!isMount || isFetching)
+    return (
+      <Box>
+        <LinearProgress />
+        Loading data...
+      </Box>
+    );
+
   return (
     <DataGrid
       columns={columns}
@@ -92,7 +111,6 @@ const AnnouncedDataDisplay: FC<AnnouncedDataDisplayProps> = ({
       initialState={{
         pagination: { paginationModel: { pageSize: 25 } },
       }}
-      loading={!isMount || isFetching}
     />
   );
 };
