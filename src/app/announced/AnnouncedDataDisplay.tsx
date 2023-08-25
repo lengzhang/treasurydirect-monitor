@@ -24,12 +24,14 @@ const dateValueGetter = (
 const priceValueGetter = (
   params: GridValueGetterParams<any, number, GridTreeNodeWithRender>
 ) => {
+  if (!params.value) return null
   return "$" + params.value?.toFixed(2);
 };
 
 const rateValueGetter = (
   params: GridValueGetterParams<any, number, GridTreeNodeWithRender>
 ) => {
+  if (!params.value) return null
   return params.value?.toFixed(2) + "%";
 };
 
