@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import {
   SECURITIES_BASE_URL,
   SECURITY_TYPES,
-  SECURITY_TYPES_TYPE,
 } from "@/constancts";
 
 export const GET = async (request: Request) => {
