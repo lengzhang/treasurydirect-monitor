@@ -55,11 +55,12 @@ const useAnnouncedDataDisplay = (
             maturingDate,
             pricePer100,
             averageMedianDiscountRate,
+            interestRate,
           },
           index
         ) => {
           const price = parseFloat(pricePer100);
-          const rate = parseFloat(averageMedianDiscountRate);
+          const rate = parseFloat(interestRate || averageMedianDiscountRate);
 
           return {
             id: `${index}-${cusip}`,

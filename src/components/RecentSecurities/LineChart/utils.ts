@@ -5,7 +5,13 @@ export const getLabelsAndTerms = (data: Record<string, string>[]) => {
   const { labels, terms } = data.reduce<{ labels: string[]; terms: TermsType }>(
     (
       { labels, terms },
-      { issueDate, securityTerm, pricePer100, averageMedianDiscountRate }
+      {
+        issueDate,
+        securityTerm,
+        pricePer100,
+        averageMedianDiscountRate,
+        interestRate,
+      }
     ) => {
       const issueDateStr = issueDate.replace(/T.*/, "");
       if (!labels.includes(issueDateStr)) labels.push(issueDateStr);
@@ -14,7 +20,7 @@ export const getLabelsAndTerms = (data: Record<string, string>[]) => {
       if (isNaN(price)) return { labels, terms };
 
       const unit = securityTerm.split(/\b/)[2];
-      const rate = parseFloat(averageMedianDiscountRate);
+      const rate = parseFloat(interestRate || averageMedianDiscountRate);
 
       if (!terms[unit]) terms[unit] = {};
       if (!terms[unit][securityTerm])
