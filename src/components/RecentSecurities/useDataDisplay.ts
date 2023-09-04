@@ -37,7 +37,7 @@ const initialState: State = {
 
 const useDataDisplay = (
   securityType: SECURITY_TYPES_TYPE,
-  startDate: string
+  startDate: string,
 ) => {
   const isMount = useMount();
   const [state, dispatch] = useReducer(reducer, initialState);

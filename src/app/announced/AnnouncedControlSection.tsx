@@ -9,7 +9,7 @@ interface AnnouncedControlSectionProps {
   days: number;
   onChangeSecurityType: (
     event: React.MouseEvent<HTMLElement>,
-    value: SECURITY_TYPES_TYPE
+    value: SECURITY_TYPES_TYPE,
   ) => void;
   onChangeDays: (event: React.MouseEvent<HTMLElement>, value: number) => void;
 }

@@ -11,7 +11,7 @@ export const getLabelsAndTerms = (data: Record<string, string>[]) => {
         pricePer100,
         averageMedianDiscountRate,
         interestRate,
-      }
+      },
     ) => {
       const issueDateStr = issueDate.replace(/T.*/, "");
       if (!labels.includes(issueDateStr)) labels.push(issueDateStr);
@@ -38,12 +38,12 @@ export const getLabelsAndTerms = (data: Record<string, string>[]) => {
 
       return { labels, terms };
     },
-    { labels: [], terms: {} }
+    { labels: [], terms: {} },
   );
 
   for (const unit of Object.keys(terms)) {
     const list = Object.keys(terms[unit]).sort(
-      (a, b) => parseInt(a) - parseInt(b)
+      (a, b) => parseInt(a) - parseInt(b),
     );
     for (let i = 0; i < list.length; i++) {
       const term = list[i];
@@ -59,7 +59,7 @@ export const generateChartData =
     const datasets: DatasetType[] = [];
     for (const unit of Object.keys(terms)) {
       for (const term of Object.keys(terms[unit]).sort(
-        (a, b) => parseInt(a) - parseInt(b)
+        (a, b) => parseInt(a) - parseInt(b),
       )) {
         const dataset: DatasetType = {
           label: term,

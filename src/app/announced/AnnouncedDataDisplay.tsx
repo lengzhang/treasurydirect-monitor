@@ -16,22 +16,22 @@ interface AnnouncedDataDisplayProps {
 }
 
 const dateValueGetter = (
-  params: GridValueGetterParams<any, Dayjs, GridTreeNodeWithRender>
+  params: GridValueGetterParams<any, Dayjs, GridTreeNodeWithRender>,
 ) => {
   return params.value?.format(DATE_FORMAT);
 };
 
 const priceValueGetter = (
-  params: GridValueGetterParams<any, number, GridTreeNodeWithRender>
+  params: GridValueGetterParams<any, number, GridTreeNodeWithRender>,
 ) => {
-  if (!params.value) return null
+  if (!params.value) return null;
   return "$" + params.value?.toFixed(2);
 };
 
 const rateValueGetter = (
-  params: GridValueGetterParams<any, number, GridTreeNodeWithRender>
+  params: GridValueGetterParams<any, number, GridTreeNodeWithRender>,
 ) => {
-  if (!params.value) return null
+  if (!params.value) return null;
   return params.value?.toFixed(2) + "%";
 };
 
@@ -92,7 +92,7 @@ const AnnouncedDataDisplay: FC<AnnouncedDataDisplayProps> = ({
 }) => {
   const { isMount, isFetching, displayDataSet } = useAnnouncedDataDisplay(
     securityType,
-    days
+    days,
   );
 
   if (!isMount || isFetching)

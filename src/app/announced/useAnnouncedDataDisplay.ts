@@ -19,7 +19,7 @@ interface DisplayData {
 
 const useAnnouncedDataDisplay = (
   securityType: SECURITY_TYPES_TYPE,
-  days: number
+  days: number,
 ) => {
   const isMount = useMount();
   const [isFetching, setIsFetching] = useState(false);
@@ -57,7 +57,7 @@ const useAnnouncedDataDisplay = (
             averageMedianDiscountRate,
             interestRate,
           },
-          index
+          index,
         ) => {
           const price = parseFloat(pricePer100);
           const rate = parseFloat(interestRate || averageMedianDiscountRate);
@@ -73,8 +73,8 @@ const useAnnouncedDataDisplay = (
             price: Number.isNaN(price) ? null : price,
             rate: Number.isNaN(rate) ? null : rate,
           };
-        }
-      )
+        },
+      ),
     );
     setIsFetching(false);
   };
