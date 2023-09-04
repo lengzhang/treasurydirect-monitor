@@ -45,6 +45,7 @@ const useDataGridColumns = () => {
       align: "right",
       minWidth: 104,
       valueGetter: (params) => params.value.replaceAll("-", " "),
+      filterable: false,
     },
     {
       field: "auctionDate",
