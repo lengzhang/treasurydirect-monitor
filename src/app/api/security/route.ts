@@ -18,7 +18,7 @@ export const GET = async (request: Request) => {
   const day = `${date.getUTCDate()}`.padStart(2, "0");
 
   const res = await fetch(
-    `${SECURITIES_BASE_URL}/${cusip}/${month}/${day}/${year}`
+    `${SECURITIES_BASE_URL}/${cusip}/${month}/${day}/${year}`,
   );
   const data = await res.json();
 

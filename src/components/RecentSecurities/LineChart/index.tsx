@@ -24,13 +24,13 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const LineChart: FC<LineChartInterface> = ({ data, isPriceMode }) => {
   const { state, onClickLegend, onTriggerAllLegends } = useLineChart(
     data,
-    isPriceMode
+    isPriceMode,
   );
   return (
     <>

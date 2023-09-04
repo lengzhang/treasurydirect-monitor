@@ -94,14 +94,14 @@ const useRecentSecurities = () => {
 
   const onChangeSecurityType = (
     event: React.MouseEvent<HTMLElement>,
-    value: SECURITY_TYPES_TYPE
+    value: SECURITY_TYPES_TYPE,
   ) => {
     dispatch({ type: "set-security-type", value: value });
   };
 
   const onChangeDisplayMode = (
     event: React.MouseEvent<HTMLElement>,
-    value: "price" | "rate"
+    value: "price" | "rate",
   ) => {
     dispatch({ type: "set-display-mode", value: value });
   };

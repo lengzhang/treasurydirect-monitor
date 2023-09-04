@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier-check": "npx prettier . --check",
+    "prettier-write": "npx prettier . --write"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -29,5 +31,8 @@
     "react-dom": "18.2.0",
     "styled-components": "^5.3.11",
     "typescript": "5.1.6"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.3"
   }
 }

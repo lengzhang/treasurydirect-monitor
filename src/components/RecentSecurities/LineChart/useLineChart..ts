@@ -33,7 +33,7 @@ const useLineChart = (data: Record<string, string>[], isPriceMode: boolean) => {
   useEffect(() => {
     const datasets = generateChartData(isPriceMode ? "price" : "rate")(
       state.labels,
-      state.terms
+      state.terms,
     );
     dispatch({ type: "set-datasets", datasets });
   }, [isPriceMode, state.labels, state.terms]);
@@ -44,7 +44,7 @@ const useLineChart = (data: Record<string, string>[], isPriceMode: boolean) => {
       terms[unit][term].hidden = !terms[unit][term].hidden;
       dispatch({ type: "set-terms", terms });
     },
-    [state.terms]
+    [state.terms],
   );
 
   const onTriggerAllLegends = useCallback(
@@ -57,7 +57,7 @@ const useLineChart = (data: Record<string, string>[], isPriceMode: boolean) => {
 
       dispatch({ type: "set-terms", terms });
     },
-    [state.terms]
+    [state.terms],
   );
 
   return { state, onClickLegend, onTriggerAllLegends };

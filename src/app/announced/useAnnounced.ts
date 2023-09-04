@@ -47,7 +47,7 @@ const useAnnounced = () => {
   const isMount = useMount();
   const [state, dispatch] = useReducer(
     reducer,
-    fromLocalStorage(isMount ? localStorage : undefined)
+    fromLocalStorage(isMount ? localStorage : undefined),
   );
 
   useEffect(() => {
@@ -56,14 +56,14 @@ const useAnnounced = () => {
 
   const onChangeSecurityType = (
     event: React.MouseEvent<HTMLElement>,
-    value: SECURITY_TYPES_TYPE
+    value: SECURITY_TYPES_TYPE,
   ) => {
     dispatch({ type: "set-security-type", value });
   };
 
   const onChangeDays = (
     event: React.MouseEvent<HTMLElement>,
-    value: number
+    value: number,
   ) => {
     dispatch({ type: "set-days", value });
   };

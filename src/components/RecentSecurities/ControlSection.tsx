@@ -10,11 +10,11 @@ interface RecentSecuritiesControlSectionProps {
   sinceFrom: Dayjs;
   onChangeSecurityType: (
     event: React.MouseEvent<HTMLElement>,
-    value: SECURITY_TYPES_TYPE
+    value: SECURITY_TYPES_TYPE,
   ) => void;
   onChangeDisplayMode: (
     event: React.MouseEvent<HTMLElement>,
-    value: "price" | "rate"
+    value: "price" | "rate",
   ) => void;
   onChangeSinceFrom: (value: Dayjs | null) => void;
 }
