@@ -1,99 +1,35 @@
-import { DATE_FORMAT, SECURITY_TYPES_TYPE } from "@/constancts";
 import { FC } from "react";
-import useAnnouncedDataDisplay from "./useAnnouncedDataDisplay";
 import {
-  DataGrid,
-  GridColDef,
-  GridTreeNodeWithRender,
-  GridValueGetterParams,
-} from "@mui/x-data-grid";
-import { Dayjs } from "dayjs";
-import { Box, LinearProgress } from "@mui/material";
+  Box,
+  Chip,
+  Grid,
+  LinearProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+
+import { SECURITY_TYPES_TYPE } from "@/constancts";
+import useAnnouncedDataDisplay from "./useAnnouncedDataDisplay";
+import useDataGridColumns from "./useDataGridColumns";
 
 interface AnnouncedDataDisplayProps {
   securityType: SECURITY_TYPES_TYPE;
   days: number;
 }
 
-const dateValueGetter = (
-  params: GridValueGetterParams<any, Dayjs, GridTreeNodeWithRender>,
-) => {
-  return params.value?.format(DATE_FORMAT);
-};
-
-const priceValueGetter = (
-  params: GridValueGetterParams<any, number, GridTreeNodeWithRender>,
-) => {
-  if (!params.value) return null;
-  return "$" + params.value?.toFixed(2);
-};
-
-const rateValueGetter = (
-  params: GridValueGetterParams<any, number, GridTreeNodeWithRender>,
-) => {
-  if (!params.value) return null;
-  return params.value?.toFixed(2) + "%";
-};
-
-const columns: GridColDef[] = [
-  { field: "cusip", headerName: "cusip", flex: 2, minWidth: 104 },
-  {
-    field: "securityType",
-    headerName: "type",
-    flex: 1,
-    align: "left",
-    minWidth: 104,
-  },
-  {
-    field: "securityTerm",
-    headerName: "term",
-    flex: 1,
-    align: "right",
-    minWidth: 104,
-    valueGetter: (params) => params.value.replace("-", " "),
-  },
-  {
-    field: "auctionDate",
-    headerName: "auction date",
-    valueGetter: dateValueGetter,
-    flex: 2,
-    align: "center",
-    minWidth: 152,
-  },
-  {
-    field: "issueDate",
-    headerName: "issue date",
-    valueGetter: dateValueGetter,
-    flex: 2,
-    align: "center",
-    minWidth: 136,
-  },
-  {
-    field: "price",
-    headerName: "price",
-    valueGetter: priceValueGetter,
-    flex: 1,
-    align: "right",
-    minWidth: 104,
-  },
-  {
-    field: "rate",
-    headerName: "rate",
-    valueGetter: rateValueGetter,
-    flex: 1,
-    align: "right",
-    minWidth: 104,
-  },
-];
-
 const AnnouncedDataDisplay: FC<AnnouncedDataDisplayProps> = ({
   securityType,
   days,
 }) => {
-  const { isMount, isFetching, displayDataSet } = useAnnouncedDataDisplay(
-    securityType,
-    days,
-  );
+  const {
+    isMount,
+    isFetching,
+    displayDataSet,
+    securityTerms,
+    onSecurityTermClick,
+  } = useAnnouncedDataDisplay(securityType, days);
+  const { columns } = useDataGridColumns();
 
   if (!isMount || isFetching)
     return (
@@ -104,16 +40,34 @@ const AnnouncedDataDisplay: FC<AnnouncedDataDisplayProps> = ({
     );
 
   return (
-    <DataGrid
-      columns={columns}
-      rows={displayDataSet}
-      autoHeight
-      pageSizeOptions={[5, 25, 50, 100]}
-      density="compact"
-      initialState={{
-        pagination: { paginationModel: { pageSize: 25 } },
-      }}
-    />
+    <>
+      <Grid container spacing={1} direction="row" marginBottom={1}>
+        <Grid item>
+          <Typography variant="subtitle2">Security terms: </Typography>
+        </Grid>
+        {securityTerms.map(({ securityTerm, show, color }, index) => (
+          <Grid item key={securityTerm} onClick={onSecurityTermClick(index)}>
+            <Chip
+              style={{ color, cursor: "default" }}
+              label={securityTerm}
+              size="small"
+              variant="outlined"
+              disabled={!show}
+            />
+          </Grid>
+        ))}
+      </Grid>
+      <DataGrid
+        columns={columns}
+        rows={displayDataSet}
+        autoHeight
+        pageSizeOptions={[5, 25, 50, 100]}
+        density="compact"
+        initialState={{
+          pagination: { paginationModel: { pageSize: 25 } },
+        }}
+      />
+    </>
   );
 };
 

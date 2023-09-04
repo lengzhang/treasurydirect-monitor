@@ -1,4 +1,4 @@
-import { getChartJSColor } from "@/utils";
+import { getRandomColor } from "@/utils";
 import { DatasetType, TermsType } from "./types";
 
 export const getLabelsAndTerms = (data: Record<string, string>[]) => {
@@ -47,7 +47,7 @@ export const getLabelsAndTerms = (data: Record<string, string>[]) => {
     );
     for (let i = 0; i < list.length; i++) {
       const term = list[i];
-      terms[unit][term].color = getChartJSColor(i);
+      terms[unit][term].color = getRandomColor({ lightness: 55 });
     }
   }
 
